@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.web.post.ReplyMapper">
+	<select id="list" resultType="Reply">
+		SELECT * FROM COMMENTS WHERE POSTNO = #{postno}		
+		ORDER BY COMMENTNO DESC
+	</select>
+	
+	<select id="infiniteList" parameterType="PageProxy" resultType="Reply">
+		SELECT A.* FROM (SELECT * FROM COMMENTS WHERE POSTNO = #{postno} ORDER BY COMMENTNO DESC  LIMIT 0, #{pageSize}) A
+	</select>
+	
+	<select id="countReply"  parameterType="int" resultType="int">
+    	SELECT COUNT(*) FROM COMMENTS WHERE POSTNO = #{postno}	
+    </select>
+	
+	<!-- create -->
+	<insert id="create">
+		INSERT INTO COMMENTS (POSTNO, USERNO, CONTENT) 
+		values(#{postno}, #{userno}, #{content})
+	</insert>
+	
+	<!-- update -->
+	<update id="update">
+		UPDATE COMMENTS SET CONTENT=#{content} WHERE COMMENTNO = #{commentno}
+	</update>
+	
+	<!-- delete -->
+	<delete id="delete">
+		DELETE FROM COMMENTS WHERE COMMENTNO = #{commentno}
+	</delete>
+</mapper>

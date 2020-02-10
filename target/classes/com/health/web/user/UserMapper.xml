@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.web.user.UserMapper">
+	<!-- 로그인 SQL-->
+	<select  id="login" resultType="User">
+		SELECT * FROM USERS
+		WHERE USERID LIKE #{userid} AND PASSWD LIKE #{passwd}
+	</select>
+	<!-- 회원가입 SQL-->
+	<insert  id="signUp" parameterType="User">
+		INSERT INTO USERS(USERID,PASSWD,UNAME,AGE,GENDER,HEIGHT,WEIGHT,FAT,MUSCLE)
+		VALUES(#{userid},#{passwd},#{uname},#{age},#{gender},#{height},#{weight},#{fat},#{muscle})
+	</insert>
+	<!-- 아이디 중복체크 -->
+	<select  id="existId" resultType="integer">
+		SELECT COUNT(*) FROM USERS
+		WHERE USERID LIKE #{userid} 
+	</select>
+
+	<insert id="insetMap" parameterType="Center">
+		INSERT INTO CENTER(CNAME,CADDR,CPHONE,CSCORE)
+		VALUES(#{cname},#{caddr},#{cphone},#{cscore})
+	</insert>
+	  <update id="makeRoutine" parameterType="User">
+    	UPDATE USERS
+    	SET
+    	UNAME = #{uname},
+    	HEIGHT = #{height},
+    	WEIGHT = #{weight},
+    	MUSCLE = #{muscle},
+    	FAT = #{fat},
+    	CAREER = #{career},
+    	DIVISION = #{division}
+    	WHERE USERID LIKE #{userid}
+    </update>
+    <select id="selectUpdatedUser" parameterType="User" resultType="User">
+    	SELECT * FROM USERS
+    	WHERE USERID LIKE #{userid}
+   	</select>
+   	<!-- 더미값 넣기 -->
+   	<insert  id="insertDummy" parameterType="User">
+		INSERT INTO USERS(USERID,PASSWD,UNAME,AGE,GENDER,HEIGHT,WEIGHT,FAT,MUSCLE,CAREER,DIVISION)
+		VALUES(#{userid},#{passwd},#{uname},#{age},#{gender},#{height},#{weight},#{fat},#{muscle},#{career},#{division})
+	</insert>
+</mapper>

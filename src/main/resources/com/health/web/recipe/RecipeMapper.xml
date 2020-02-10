@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.web.recipe.RecipeMapper">
+	<insert  id="insertRecipe" parameterType="Recipe">
+		INSERT INTO RECIPE(FNAME,FIMG,LINK)
+		VALUES(#{fname} ,#{fimg},#{link})
+	</insert>
+	<select id="totalRecipe" resultType="map" parameterType="Proxy">
+		SELECT FNAME, FIMG, LINK
+		FROM RECIPE 
+		ORDER BY RECIPENO LIMIT #{startRow} , #{pageSize}
+	</select>
+	<select  id="countRecipe" parameterType="Proxy" resultType="String">
+		SELECT COUNT(*)
+		FROM RECIPE
+	</select>
+</mapper>
