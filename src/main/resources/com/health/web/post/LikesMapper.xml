@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.web.post.LikesMapper">
+	<insert id="create" parameterType="Likes">
+		INSERT INTO LIKES(POSTNO, USERNO) VALUES (#{postno}, #{userno})
+	</insert>
+
+	<select id="read" parameterType="Likes" resultType="int">
+		SELECT COUNT(*) FROM LIKES WHERE POSTNO = #{postno} AND USERNO = #{userno}
+	</select>
+	
+	<delete id="delete" parameterType="Likes">
+		DELETE FROM LIKES 
+		WHERE POSTNO = #{postno} AND USERNO = #{userno}
+	</delete>
+
+	
+</mapper>

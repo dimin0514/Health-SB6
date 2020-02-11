@@ -79,18 +79,18 @@ public class PostCtrl {
 	}
 	
 	@GetMapping("/read/{postno}")
-	public Post readBrd(@PathVariable String seq) {
-		Supplier<Post> c = ()-> postMapper.selectPost(seq);
+	public Post readBrd(@PathVariable int postno) {
+		Supplier<Post> c = ()-> postMapper.selectPost(postno);
 		return c.get();
 	}
 	
 	@PutMapping("/update/{postno}")
-	public Post updateBrd(@PathVariable String seq, @RequestBody Post param) {
+	public Post updateBrd(@PathVariable int postno, @RequestBody Post param) {
 		System.out.println("수정 들어옴");
 		System.out.println("수정 글번호" + param.getPostno());
 		Consumer<Post> c = t -> postMapper.updatePost(param);
 		c.accept(param);
-		Supplier<Post> d = ()-> postMapper.selectPost(seq);
+		Supplier<Post> d = ()-> postMapper.selectPost(postno);
 		return d.get();
 		
 	}

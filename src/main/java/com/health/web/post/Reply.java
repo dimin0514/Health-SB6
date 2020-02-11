@@ -1,5 +1,9 @@
 package com.health.web.post;
 
+
+
+
+
 import java.util.Date;
 
 import org.springframework.context.annotation.Lazy;
@@ -18,6 +22,6 @@ public class Reply {
 	private int commentno;
 	private int postno;
 	private int userno;
-	private Date regdate;
+	private String regdate;
 	private String content;
 }

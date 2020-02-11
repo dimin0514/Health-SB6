@@ -51,6 +51,7 @@ brd = (()=>{
 				    <img src="${context+'/resources/upload/'+j.img}" alt="" class="con_img">
 				    <div class="logos">
 				        <div class="logos_left">
+				        	<div name="like">♡</div>
 				            <img src="${img+'/heart.svg'}" alt="" class="logo_img">
 				            <img src="${img+'/speech-bubble.svg'}" alt="" class="logo_img">
 				        </div>
@@ -90,12 +91,90 @@ brd = (()=>{
 				</div>
 				`)
 				.appendTo('#menu2 div.row')
+
 				$(`#reply${j.postno} img.con_img`).click(e=>{
 					e.preventDefault()
 					replyModal(j)
 				})
+			
+				
+				likes(j)
 				writeReply(j)
 			})//each문 끝
+			
+		})
+	}
+	
+	let likes=j=>{
+		
+		
+//		$(`#reply${j.postno} div[name="like"]`)
+//		.text('♡')
+//		.click(()=>{
+//			$.getJSON(context+'/likes/read/'+j.postno+'/'+sessionStorage.getItem('userno'), d=>{
+//				if(d==1){
+//					alert('이미 좋아요 한 글입니다')
+//				}
+//				else{
+//					alert('좋아요 클릭')
+//				}
+//			})
+//		})
+		
+		
+		
+//		alert('글번호'+j.postno)
+		$.getJSON(context+'/likes/read/'+j.postno+'/'+sessionStorage.getItem('userno'), d=>{
+			if(d==0){
+				$(`#reply${j.postno} div[name="like"]`)
+				.text('♡')
+				.click(()=>{
+					
+					$.ajax({
+						url : context +'/likes/create/',
+						type:'PUT',
+						data: JSON.stringify({postno:j.postno,userno:sessionStorage.getItem('userno')}),
+						dataType :'json',
+						contentType : 'application/json',
+						success : d =>{
+							if(d.msg=="success")
+								$(`#reply${j.postno} div[name="like"]` ).text('♥')
+								
+						},
+						error: 	e =>{
+							alert('ajax 실패')
+						}
+					})
+				})
+			}
+			else{
+				$(`#reply${j.postno} div[name="like"]` )
+				.text('♥')
+				.click(()=>{
+					alert('좋아요 클릭 취소')
+					$(`#reply${j.postno} div[name="like"]` ).text('♡')
+					$.ajax({
+						url : context +'/likes/delete/'+j.postno,
+						type:'DELETE',
+						data: JSON.stringify({postno:j.postno,userno:$.userno()}),
+						dataType :'json',
+						contentType : 'application/json',
+						success : d =>{
+							if(d.msg=="success")
+								$(`#reply${j.postno} div[name="like"]` ).text('♡')
+								
+						},
+						error: 	e =>{
+							alert('ajax 실패')
+						}
+					})
+					
+					
+					
+				})
+				
+			}
+			
 		})
 	}
 	
@@ -103,9 +182,8 @@ brd = (()=>{
 		$(`#replymodal${j.postno} div[class="replies"]`).empty()
 		$.getJSON(context+`/reply/list/${j.postno}`,f=>{
 			$.each(f,(a,b)=>{
-				console.log(f);
 				if(b.userno == parseInt(sessionStorage.getItem('userno'))){
-					$(`<textarea name="reply${b.commentno}" style="font-size: 12px; border-color: white;"> ${b.content} </textarea><a name="modify${b.commentno}" style="font-size: 12px; color: red;"> 수정 </a><a name="delete${b.commentno}" style="font-size: 12px; color: red;">삭제</a><br>`)
+					$(`<textarea name="reply${b.commentno}" style="font-size: 12px; border-color: white;"> ${b.content} ${b.regdate}</textarea><a name="modify${b.commentno}" style="font-size: 12px; color: red;"> 수정 </a><a name="delete${b.commentno}" style="font-size: 12px; color: red;">삭제</a><br>`)
 					.appendTo(`#replymodal${j.postno} div[class="replies"]`)
 					$(`a[name="modify${b.commentno}"]`).click(e=>{
 						e.preventDefault()
@@ -208,6 +286,25 @@ brd = (()=>{
 		})
 		
 	}
+	let infiniteReply =x=>{
+		let firtPage = 0
+		$(window).scroll(function() {
+			if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+				let nextPage = ++firtPage
+				$.getJSON(context+'/post/infintelist/'+x.pageSize+'/'+ nextPage, d=>{
+					let endPage = d.pxy.endPage
+					if(nextPage != endPage+1){
+						recent_updates({ pageSize: x.pageSize, currPage: nextPage})
+					}else{
+						alert('마지막 페이지입니다.')
+						
+					}
+				})
+			}
+		})
+		
+	}
+	
 	return { onCreate }
 })()
 	/*let write=()=>{

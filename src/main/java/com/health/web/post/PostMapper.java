@@ -14,7 +14,7 @@ public interface PostMapper {
 	//게시물 목록 조회 기능(모든 사진)
 	public List<Post> selectAll();
 	public Integer countBrdSeq();
-	public Post selectPost(String brdseq);
+	public Post selectPost(int postno);
 	//아이디로 회원번호 조회후 번호로 모든 게시물 불러오기
 	List<Post> selectPostListById(int userno);
 	
